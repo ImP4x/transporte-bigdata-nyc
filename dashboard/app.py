@@ -3,6 +3,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+from pathlib import Path
+
+# ✅ SOLUCIÓN: Detectar la ruta base automáticamente para local y cloud
+BASE_DIR = Path(__file__).parent.parent
+if str(BASE_DIR).endswith('dashboard'):
+    BASE_DIR = BASE_DIR.parent
+else:
+    BASE_DIR = Path.cwd()
+
+DATA_DIR = BASE_DIR / "data"
+VIZ_DIR = BASE_DIR / "visualizations"
 
 
 # Configuración de página con diseño moderno
@@ -12,6 +23,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+
 
 
 # CSS personalizado con diseño moderno en azul
@@ -191,6 +204,8 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 
+
+
 # Sidebar moderno
 with st.sidebar:
     st.markdown("""
@@ -232,6 +247,8 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
 
+
+
 # Header principal
 st.markdown("""
     <div style='text-align: center; margin-bottom: 20px;'>
@@ -240,7 +257,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+
+
 st.title("Proyecto Final: Análisis y Predicción de Transporte Urbano")
+
+
 
 
 st.markdown("""
@@ -253,18 +274,28 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+
+
 st.markdown("---")
+
+
 
 
 # 🔹 Sección 1: Estadísticas generales - CON VALORES PREDETERMINADOS
 st.header("📊 Estadísticas Generales")
+
+
 
 # Valores predeterminados del dataset completo (cleaned_data.csv 2.3GB)
 total_registros = 12_738_553
 duracion_promedio = 736.45
 distancia_promedio = 13.47
 
+
+
 col1, col2, col3 = st.columns(3)
+
+
 
 with col1:
     st.metric(
@@ -272,11 +303,15 @@ with col1:
         value=f"{total_registros:,}"
     )
 
+
+
 with col2:
     st.metric(
         label="⏱️ Duración promedio de viaje (s)",
         value=f"{duracion_promedio}"
     )
+
+
 
 with col3:
     st.metric(
@@ -284,14 +319,22 @@ with col3:
         value=f"{distancia_promedio}"
     )
 
+
+
 st.markdown("---")
+
+
 
 
 # 🔹 Sección 2, 3, 4: Visualizaciones con tabs
 st.header("📈 Análisis de Modelos y Visualizaciones")
 
 
+
+
 tab1, tab2, tab3 = st.tabs(["🕒 Error por Hora", "🤖 Modelos ML", "🌆 Mapa de Calor"])
+
+
 
 
 with tab1:
@@ -304,11 +347,13 @@ with tab1:
     """, unsafe_allow_html=True)
     
     try:
-        st.image("../visualizations/error_por_hora.png", 
+        st.image(str(VIZ_DIR / "error_por_hora.png"), 
                 caption="Error absoluto promedio por hora del día",
                 use_container_width=True)
     except Exception as e:
         st.warning(f"⚠️ Imagen no encontrada: error_por_hora.png")
+
+
 
 
 with tab2:
@@ -320,11 +365,13 @@ with tab2:
     """, unsafe_allow_html=True)
     
     try:
-        st.image("../visualizations/prediction_comparison.png",
+        st.image(str(VIZ_DIR / "prediction_comparison.png"),
                 caption="Predicción vs. duración real",
                 use_container_width=True)
     except Exception as e:
         st.warning(f"⚠️ Imagen no encontrada: prediction_comparison.png")
+
+
 
 
 with tab3:
@@ -336,22 +383,28 @@ with tab3:
     """, unsafe_allow_html=True)
     
     try:
-        st.image("../visualizations/heatmap_nyc_log_annotated_clean.png",
+        st.image(str(VIZ_DIR / "heatmap_nyc_log_annotated_clean.png"),
                 caption="Densidad de viajes por zona (NYC)",
                 use_container_width=True)
     except Exception as e:
         st.warning(f"⚠️ Imagen no encontrada: heatmap_nyc_log_annotated_clean.png")
 
 
+
+
 st.markdown("---")
+
+
 
 
 # 🔹 Sección 5: Clima y zona (mejorada visualmente)
 st.header("🌦️ Clima y Zona")
 
 
+
+
 try:
-    df_weather = pd.read_csv('../data/enriched_data.csv')
+    df_weather = pd.read_csv(str(DATA_DIR / "enriched_data.csv"))
     
     col1, col2 = st.columns([1, 2])
     
@@ -377,15 +430,23 @@ try:
         st.dataframe(df_filtrado[['pickup_latitude', 'pickup_longitude', 'weather']].head(), use_container_width=True)
 
 
+
+
 except Exception as e:
     st.error(f"❌ Error al cargar datos de clima: {e}")
+
+
 
 
 st.markdown("---")
 
 
+
+
 # 🔹 Sección 6: Datos por hora (Spark)
 st.header("⚡ Viajes por Hora (PySpark en Databricks)")
+
+
 
 
 st.markdown("""
@@ -396,21 +457,31 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+
+
 try:
-    df_hour = pd.read_csv('../data/trips_by_hour.csv')
+    df_hour = pd.read_csv(str(DATA_DIR / "trips_by_hour.csv"))
     st.bar_chart(df_hour.set_index('hour'))
 except Exception as e:
     st.error(f"❌ Error al cargar datos por hora: {e}")
 
 
+
+
 st.markdown("---")
+
+
 
 
 # 🔹 Sección FINAL: Créditos simplificado
 st.header("🎤 Presentación y Créditos")
 
 
+
+
 col1, col2 = st.columns(2)
+
+
 
 
 with col1:
@@ -426,6 +497,8 @@ with col1:
     """, unsafe_allow_html=True)
 
 
+
+
 with col2:
     st.markdown("""
     <div style='background: linear-gradient(135deg, rgba(21, 27, 59, 0.8), rgba(10, 14, 39, 0.9));
@@ -439,7 +512,11 @@ with col2:
     """, unsafe_allow_html=True)
 
 
+
+
 st.markdown("---")
+
+
 
 
 # Footer
