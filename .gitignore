@@ -1,0 +1,36 @@
+# ===== CSV FILES NO USADOS EN EL DASHBOARD =====
+data/cleaned_data.csv                   
+data/yellow_tripdata_2015-01.csv
+data/final_data.csv
+data/heatmap_counts.csv
+report/opencage_usage_report.csv
+
+
+# ===== PYTHON CACHE =====
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+
+# ===== JUPYTER CACHE =====
+.ipynb_checkpoints/
+
+
+# ===== ARCHIVOS DEL SISTEMA =====
+.DS_Store
+Thumbs.db
+
+
+# ===== IDE =====
+.vscode/
+.idea/
+
+
+# ===== VARIABLES DE ENTORNO =====
+.env
+.env.local
